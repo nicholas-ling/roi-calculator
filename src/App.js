@@ -164,18 +164,24 @@ function App() {
   return (
     <Styles>
       <div>
-        <h1>condo投资收益计算</h1>
-        管理费/月：
-        <input type="number" name="management" onChange={updateManagement} />
-        {"  "}
-        地税/年：
-        <input type="number" name="tax" onChange={updateTax} />
-        {"  "}
-        租金/月：
-        <input type="number" name="rental" onChange={updateRental} />
-        {"  "}
-        {"  "}
-        <p></p>
+        <h1>加拿大Condo投资收益计算</h1>
+        <p>condo投资利器，贷款按80%，30年1.28%利率，土地装让税目前暂不支持</p>
+        <p>有任何建议/问题欢迎联系Nic，邮箱mercurywin@gmail.com，持续更新</p>
+        <p>
+          管理费/月：
+          <input type="number" name="management" onChange={updateManagement} />
+          {"  "}
+        </p>
+        <p>
+          土地税/年：
+          <input type="number" name="tax" onChange={updateTax} />
+          {"  "}
+        </p>
+        <p>
+          月租金/月：
+          <input type="number" name="rental" onChange={updateRental} />
+          {"  "}
+        </p>
       </div>
       <Table columns={columns} data={data} />
     </Styles>
