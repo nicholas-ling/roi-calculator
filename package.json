@@ -9,6 +9,7 @@
   "dependencies": {
     "mortgage-js": "0.1.2",
     "namor": "^1.1.2",
+    "numeral": "2.0.6",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",

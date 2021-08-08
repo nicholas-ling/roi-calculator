@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useTable, useRowSelect } from "react-table";
 import makeData from "./makeData";
@@ -32,23 +32,6 @@ const Styles = styled.div`
   }
 `;
 
-const IndeterminateCheckbox = React.forwardRef(
-  ({ indeterminate, ...rest }, ref) => {
-    const defaultRef = React.useRef();
-    const resolvedRef = ref || defaultRef;
-
-    React.useEffect(() => {
-      resolvedRef.current.indeterminate = indeterminate;
-    }, [resolvedRef, indeterminate]);
-
-    return (
-      <>
-        <input type="checkbox" ref={resolvedRef} {...rest} />
-      </>
-    );
-  }
-);
-
 function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
   const {
@@ -56,38 +39,13 @@ function Table({ columns, data }) {
     getTableBodyProps,
     headerGroups,
     rows,
-    prepareRow,
-    selectedFlatRows,
-    state: { selectedRowIds }
+    prepareRow
   } = useTable(
     {
       columns,
       data
     },
-    useRowSelect,
-    (hooks) => {
-      hooks.visibleColumns.push((columns) => [
-        // Let's make a column for selection
-        {
-          id: "selection",
-          // The header can use the table's getToggleAllRowsSelectedProps method
-          // to render a checkbox
-          Header: ({ getToggleAllRowsSelectedProps }) => (
-            <div>
-              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-            </div>
-          ),
-          // The cell can use the individual row's getToggleRowSelectedProps method
-          // to the render a checkbox
-          Cell: ({ row }) => (
-            <div>
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-            </div>
-          )
-        },
-        ...columns
-      ]);
-    }
+    useRowSelect
   );
 
   // Render the UI for your table
@@ -118,26 +76,14 @@ function Table({ columns, data }) {
           })}
         </tbody>
       </table>
-      <p>Selected Rows: {Object.keys(selectedRowIds).length}</p>
-      <pre>
-        <code>
-          {JSON.stringify(
-            {
-              selectedRowIds: selectedRowIds,
-              "selectedFlatRows[].original": selectedFlatRows.map(
-                (d) => d.original
-              )
-            },
-            null,
-            2
-          )}
-        </code>
-      </pre>
     </>
   );
 }
 
 function App() {
+  const rows = 40;
+  const [data, setData] = useState(makeData(rows, 123));
+
   const columns = React.useMemo(
     () => [
       {
@@ -190,7 +136,7 @@ function App() {
             accessor: "profit"
           },
           {
-            Header: "投资回报率",
+            Header: "租金年化复合回报",
             accessor: "roi"
           }
         ]
@@ -199,10 +145,38 @@ function App() {
     []
   );
 
-  const data = React.useMemo(() => makeData(40), []);
+  const [management, setManagement] = useState(0);
+  const updateManagement = (e) => {
+    setManagement(e.target.value);
+    setData(makeData(rows, e.target.value, tax, rental));
+  };
+  const [tax, setTax] = useState(0);
+  const updateTax = (e) => {
+    setTax(e.target.value);
+    setData(makeData(rows, management, e.target.value, rental));
+  };
+  const [rental, setRental] = useState(0);
+  const updateRental = (e) => {
+    setRental(e.target.value);
+    setData(makeData(rows, management, tax, e.target.value));
+  };
 
   return (
     <Styles>
+      <div>
+        <h1>condo投资收益计算</h1>
+        管理费/月：
+        <input type="number" name="management" onChange={updateManagement} />
+        {"  "}
+        地税/年：
+        <input type="number" name="tax" onChange={updateTax} />
+        {"  "}
+        租金/月：
+        <input type="number" name="rental" onChange={updateRental} />
+        {"  "}
+        {"  "}
+        <p></p>
+      </div>
       <Table columns={columns} data={data} />
     </Styles>
   );

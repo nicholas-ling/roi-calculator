@@ -1,4 +1,5 @@
 import mortgageJs from "mortgage-js";
+import numeral from "numeral";
 
 const range = (len) => {
   const arr = [];
@@ -17,7 +18,7 @@ const formatter = new Intl.NumberFormat("en-US", {
   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
-const newPerson = (step) => {
+const newPerson = (step, m, t, r) => {
   const total = 500000 + 10000 * step;
   let mortgageCalculator = mortgageJs.createMortgageCalculator();
   mortgageCalculator.totalPrice = total;
@@ -31,20 +32,43 @@ const newPerson = (step) => {
   mortgageCalculator.mortgageInsuranceThreshold = 0.1;
   mortgageCalculator.additionalPrincipalPayment = 0;
   let payment = mortgageCalculator.calculatePayment();
-  console.log(payment);
+  var mortgage = payment.paymentSchedule[0].totalPayment;
+  var tax = parseFloat(t) / 12;
+  var insurance = 20;
+  var rental = parseFloat(r);
+  var management = parseFloat(m);
+  var cost = mortgage + management + tax + insurance;
+  var cost_interest =
+    payment.paymentSchedule[0].interestPayment + management + tax + insurance;
+  var roi = ((rental - cost_interest) * 360) / mortgageCalculator.downPayment;
+
+  //compound annual growth rate: https://www.investopedia.com/articles/basics/10/guide-to-calculating-roi.asp
+  var cagr = numeral((1 + roi) ** (1 / 30) - 1).format("0.00%");
+  console.log(management, cost);
   return {
     price: formatter.format(total),
     down: formatter.format(mortgageCalculator.downPayment),
-    mortgage: 1
+    mortgage: formatter.format(mortgage),
+    management: formatter.format(management),
+    tax: formatter.format(tax),
+    insurance: formatter.format(insurance),
+    rental: formatter.format(rental),
+    cash: formatter.format(rental - cost),
+    profit: formatter.format(rental - cost_interest),
+    roi: cagr
   };
 };
 
 export default function makeData(...lens) {
   const makeDataLevel = (depth = 0) => {
     const len = lens[depth];
+    const m = lens[1];
+    const t = lens[2];
+    const r = lens[3];
+
     return range(len).map((d) => {
       return {
-        ...newPerson(d)
+        ...newPerson(d, m, t, r)
       };
     });
   };
