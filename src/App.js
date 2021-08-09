@@ -102,7 +102,7 @@ function App() {
             accessor: "mortgage"
           },
           {
-            Header: "维护费",
+            Header: "管理费",
             accessor: "management"
           },
           {
@@ -165,8 +165,10 @@ function App() {
     <Styles>
       <div>
         <h1>加拿大Condo投资收益计算</h1>
-        <p>condo投资利器，贷款按80%，30年1.28%利率，土地装让税目前暂不支持</p>
-        <p>有任何建议/问题欢迎联系Nic，邮箱mercurywin@gmail.com，持续更新</p>
+        <p>condo投资利器，贷款按80%，30年1.28%利率，土地转让税目前暂不支持。</p>
+        <p>
+          有任何建议/问题欢迎联系Nic，邮箱mercurywin@gmail.com，持续更新中。
+        </p>
         <p>
           管理费/月：
           <input type="number" name="management" onChange={updateManagement} />
