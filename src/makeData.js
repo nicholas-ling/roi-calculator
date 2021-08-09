@@ -44,7 +44,7 @@ const newPerson = (step, m, t, r) => {
 
   //compound annual growth rate: https://www.investopedia.com/articles/basics/10/guide-to-calculating-roi.asp
   var cagr = numeral((1 + roi) ** (1 / 30) - 1).format("0.00%");
-  console.log(management, cost);
+
   return {
     price: formatter.format(total),
     down: formatter.format(mortgageCalculator.downPayment),
