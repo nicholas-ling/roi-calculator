@@ -18,12 +18,12 @@ const formatter = new Intl.NumberFormat("en-US", {
   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
-const newPerson = (step, m, t, r) => {
+const newPerson = (step, m, t, r, p) => {
   const total = 500000 + 10000 * step;
   let mortgageCalculator = mortgageJs.createMortgageCalculator();
   mortgageCalculator.totalPrice = total;
   mortgageCalculator.downPayment = total * 0.2;
-  mortgageCalculator.interestRate = 0.0128;
+  mortgageCalculator.interestRate = p / 100;
   mortgageCalculator.months = 360;
   mortgageCalculator.taxRate = 0;
   mortgageCalculator.insuranceRate = 0.0013;
@@ -65,10 +65,11 @@ export default function makeData(...lens) {
     const m = lens[1];
     const t = lens[2];
     const r = lens[3];
+    const p = lens[4];
 
     return range(len).map((d) => {
       return {
-        ...newPerson(d, m, t, r)
+        ...newPerson(d, m, t, r, p)
       };
     });
   };

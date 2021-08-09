@@ -148,24 +148,29 @@ function App() {
   const [management, setManagement] = useState(0);
   const updateManagement = (e) => {
     setManagement(e.target.value);
-    setData(makeData(rows, e.target.value, tax, rental));
+    setData(makeData(rows, e.target.value, tax, rental, interest));
   };
   const [tax, setTax] = useState(0);
   const updateTax = (e) => {
     setTax(e.target.value);
-    setData(makeData(rows, management, e.target.value, rental));
+    setData(makeData(rows, management, e.target.value, rental, interest));
   };
   const [rental, setRental] = useState(0);
   const updateRental = (e) => {
     setRental(e.target.value);
-    setData(makeData(rows, management, tax, e.target.value));
+    setData(makeData(rows, management, tax, e.target.value, interest));
+  };
+  const [interest, setInterest] = useState(1.28);
+  const updateInterest = (e) => {
+    setInterest(e.target.value);
+    setData(makeData(rows, management, tax, rental, e.target.value));
   };
 
   return (
     <Styles>
       <div>
         <h1>加拿大Condo投资收益计算</h1>
-        <p>condo投资利器，贷款按80%，30年1.28%利率，土地转让税目前暂不支持。</p>
+        <p>condo投资利器，贷款按80%，土地转让税目前暂不支持。</p>
         <p>
           有任何建议/问题欢迎联系Nic，邮箱mercurywin@gmail.com，持续更新中。
         </p>
@@ -182,6 +187,17 @@ function App() {
         <p>
           月租金/月：
           <input type="number" name="rental" onChange={updateRental} />
+          {"  "}
+        </p>
+        <p>
+          30年贷款利率(默认1.28)：
+          <input
+            type="number"
+            min="0"
+            max="100"
+            minname="interest"
+            onChange={updateInterest}
+          />
           {"  "}
         </p>
       </div>
