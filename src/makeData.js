@@ -41,10 +41,9 @@ const newPerson = (step, m, t, r, p) => {
   var cost_interest =
     payment.paymentSchedule[0].interestPayment + management + tax + insurance;
   var roi = ((rental - cost_interest) * 360) / mortgageCalculator.downPayment;
-
+  console.log(payment.paymentSchedule[0]);
   //compound annual growth rate: https://www.investopedia.com/articles/basics/10/guide-to-calculating-roi.asp
   var cagr = numeral((1 + roi) ** (1 / 30) - 1).format("0.00%");
-
   return {
     price: formatter.format(total),
     down: formatter.format(mortgageCalculator.downPayment),
@@ -55,7 +54,27 @@ const newPerson = (step, m, t, r, p) => {
     rental: formatter.format(rental),
     cash: formatter.format(rental - cost),
     profit: formatter.format(rental - cost_interest),
-    roi: cagr
+    roi: cagr,
+    y1: formatter.format(
+      total * (1 + 0.06) ** 1 * 0.8 -
+        payment.paymentSchedule[1 * 12 - 1].balance
+    ),
+    y2: formatter.format(
+      total * (1 + 0.06) ** 2 * 0.8 -
+        payment.paymentSchedule[2 * 12 - 1].balance
+    ),
+    y3: formatter.format(
+      total * (1 + 0.06) ** 3 * 0.8 -
+        payment.paymentSchedule[3 * 12 - 1].balance
+    ),
+    y4: formatter.format(
+      total * (1 + 0.06) ** 4 * 0.8 -
+        payment.paymentSchedule[4 * 12 - 1].balance
+    ),
+    y5: formatter.format(
+      total * (1 + 0.06) ** 5 * 0.8 -
+        payment.paymentSchedule[5 * 12 - 1].balance
+    )
   };
 };
 

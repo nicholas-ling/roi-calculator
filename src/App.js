@@ -82,7 +82,7 @@ function Table({ columns, data }) {
 
 function App() {
   const rows = 40;
-  const [data, setData] = useState(makeData(rows, 123));
+  const [data, setData] = useState(makeData(40, 0, 0, 0, 1.28));
 
   const columns = React.useMemo(
     () => [
@@ -125,7 +125,7 @@ function App() {
         ]
       },
       {
-        Header: "财务分析",
+        Header: "财务指标",
         columns: [
           {
             Header: "每月现金流",
@@ -138,6 +138,31 @@ function App() {
           {
             Header: "租金年化复合回报",
             accessor: "roi"
+          }
+        ]
+      },
+      {
+        Header: "refinance套现(房产增值年化复合按6%计算)",
+        columns: [
+          {
+            Header: "一年",
+            accessor: "y1"
+          },
+          {
+            Header: "两年",
+            accessor: "y2"
+          },
+          {
+            Header: "三年",
+            accessor: "y3"
+          },
+          {
+            Header: "四年",
+            accessor: "y4"
+          },
+          {
+            Header: "五年",
+            accessor: "y5"
           }
         ]
       }
@@ -162,18 +187,20 @@ function App() {
   };
   const [interest, setInterest] = useState(1.28);
   const updateInterest = (e) => {
-    setInterest(e.target.value);
-    setData(makeData(rows, management, tax, rental, e.target.value));
+    if (e.target.value > 0) {
+      setInterest(e.target.value);
+      setData(makeData(rows, management, tax, rental, e.target.value));
+    }
   };
 
   return (
     <Styles>
       <div>
         <h1>加拿大Condo投资收益计算</h1>
-        <p>condo投资利器，贷款按80%，土地转让税目前暂不支持。</p>
         <p>
-          有任何建议/问题欢迎联系Nic，邮箱mercurywin@gmail.com，持续更新中。
+          condo投资利器，可反向对投资标的定价，贷款按最大化80%，土地转让税目前暂不支持。
         </p>
+        <p>有任何建议/问题请联系Nic，邮箱mercurywin@gmail.com，持续更新中。</p>
         <p>
           管理费/月：
           <input type="number" name="management" onChange={updateManagement} />
